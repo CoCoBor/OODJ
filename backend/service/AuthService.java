@@ -1,8 +1,8 @@
 package backend.service;
 
-import models.User;
-import repository.UserRepository;
-import util.SessionManager;
+import backend.models.User;
+import backend.repository.UserRepository;
+import backend.util.SessionManager;
 
 public class AuthService {
 

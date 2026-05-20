@@ -3,11 +3,11 @@ package backend.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import models.ServicePrice;
-import models.enums.ServiceType;
-import repository.ServicePriceRepository;
-import util.IdGenerator;
-import util.SessionManager;
+import backend.models.ServicePrice;
+import backend.models.enums.ServiceType;
+import backend.repository.ServicePriceRepository;
+import backend.util.IdGenerator;
+import backend.util.SessionManager;
 
 public class ServicePriceService {
     private final SessionManager sessionManager;

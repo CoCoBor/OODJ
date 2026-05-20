@@ -3,13 +3,13 @@ package backend.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import models.Appointment;
-import models.CustomerFeedback;
-import repository.AppointmentRepository;
-import repository.FeedbackRepository;
-import repository.UserRepository;
-import util.IdGenerator;
-import util.SessionManager;
+import backend.models.Appointment;
+import backend.models.CustomerFeedback;
+import backend.repository.AppointmentRepository;
+import backend.repository.FeedbackRepository;
+import backend.repository.UserRepository;
+import backend.util.IdGenerator;
+import backend.util.SessionManager;
 
 public class FeedbackService {
 

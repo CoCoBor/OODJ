@@ -5,18 +5,18 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.regex.Pattern;
-import models.Appointment;
-import models.CounterStaff;
-import models.Customer;
-import models.Manager;
-import models.Technician;
-import models.User;
-import models.enums.AppointmentStatus;
-import models.enums.Role;
-import repository.AppointmentRepository;
-import repository.UserRepository;
-import util.IdGenerator;
-import util.SessionManager;
+import backend.models.Appointment;
+import backend.models.CounterStaff;
+import backend.models.Customer;
+import backend.models.Manager;
+import backend.models.Technician;
+import backend.models.User;
+import backend.models.enums.AppointmentStatus;
+import backend.models.enums.Role;
+import backend.repository.AppointmentRepository;
+import backend.repository.UserRepository;
+import backend.util.IdGenerator;
+import backend.util.SessionManager;
 
 public class UserService {
 

@@ -5,17 +5,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import models.Appointment;
-import models.Payment;
-import models.ServicePrice;
-import models.enums.AppointmentStatus;
-import models.enums.PaymentMethod;
-import models.enums.ServiceType;
-import repository.AppointmentRepository;
-import repository.PaymentRepository;
-import repository.ServicePriceRepository;
-import util.IdGenerator;
-import util.SessionManager;
+import backend.models.Appointment;
+import backend.models.Payment;
+import backend.models.ServicePrice;
+import backend.models.enums.AppointmentStatus;
+import backend.models.enums.PaymentMethod;
+import backend.models.enums.ServiceType;
+import backend.repository.AppointmentRepository;
+import backend.repository.PaymentRepository;
+import backend.repository.ServicePriceRepository;
+import backend.util.IdGenerator;
+import backend.util.SessionManager;
 
 public class PaymentService {
 
