@@ -1,50 +1,103 @@
 package backend.models;
 
-import java.sql.Time;
-import java.util.Date;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Feedback {
     private String feedbackId;
     private String appointmentId;
-    private String customerTP;
-    private Date date;
-    private Time time;
-    private String technicianTP;
-    private String counterStaffTP;
-    private String feedbackText;
+    private String customerId;
+    private String technicianId;
+    private String counterStaffId;
+    private int rating;
+    private String comment;
+    private LocalDateTime commentDateTime;
 
-    public Feedback(String feedbackId, String appointmentId, String customerTP, Date date, Time time, String technicianTP, String counterStaffTP, String feedbackText) {
-        this.feedbackId = feedbackId;
-        this.appointmentId = appointmentId;
-        this.customerTP = customerTP;
-        this.date = date;
-        this.time = time;
-        this.technicianTP = technicianTP;
-        this.counterStaffTP = counterStaffTP;
-        this.feedbackText = feedbackText;
+    public Feedback(String feedbackId, String appointmentId, String customerId, String technicianId, String counterStaffId, int rating, String comment, LocalDateTime commentDateTime) {
+        setFeedbackId(feedbackId);
+        setAppointmentId(appointmentId);
+        setCustomerId(customerId);
+        setTechnicianId(technicianId);
+        setCounterStaffId(counterStaffId);
+        setRating(rating);
+        setComment(comment);
+        setcommentDateTime(commentDateTime);
     }
 
-    public String getFeedbackId() { return feedbackId; }
-    public void setFeedbackId(String feedbackId) { this.feedbackId = feedbackId; }
+    
+    public String getFeedbackId() {
+        return feedbackId;
+    }
+    
+    public void setFeedbackId(String feedbackId) {
+        this.feedbackId = requireNonBlank(feedbackId, "feedbackId");
+    }
+    
+    public String getAppointmentId() {
+        return appointmentId;
+    }
+    
+    public void setAppointmentId(String appointmentId) {
+        this.appointmentId = requireNonBlank(appointmentId, "appointmentId");
+    }
+    
+    public String getCustomerId() {
+        return customerId;
+    }
+    
+    public void setCustomerId(String customerId) {
+        this.customerId = requireNonBlank(customerId, "customerId");
+    }
+    
+    public String getTechnicianId() {
+        return technicianId;
+    }
+    
+    public void setTechnicianId(String technicianId) {
+        this.technicianId = requireNonBlank(technicianId, "technicianId");
+    }
+    
+    public String getCounterStaffId() {
+        return counterStaffId;
+    }
+    
+    public void setCounterStaffId(String counterStaffId) {
+        this.counterStaffId = requireNonBlank(counterStaffId, "counterStaffId");
+    }
+    
+    public int getRating() {
+        return rating;
+    }
+    
+    public void setRating(int rating) {
+        if (rating < 1 || rating > 5) {
+            throw new IllegalArgumentException("rating must be between 1 and 5");
+        }
+        this.rating = rating;
+    }
+    
+    public String getComment() {
+        return comment;
+    }
+    
+    public void setComment(String comment) {
+        this.comment = comment == null ? "" : comment.trim();
+    }
+    
+    public LocalDateTime getcommentDateTime() {
+        return commentDateTime;
+    }
 
-    public String getAppointmentId() { return appointmentId; }
-    public void setAppointmentId(String appointmentId) { this.appointmentId = appointmentId; }
+    public void setcommentDateTime(LocalDateTime commentDateTime) {
+        this.commentDateTime = Objects.requireNonNull(commentDateTime, "commentDateTime");
+    }
 
-    public String getCustomerTP() { return customerTP; }
-    public void setCustomerTP(String customerTP) { this.customerTP = customerTP; }
-
-    public Date getDate() { return date; }
-    public void setDate(Date date) { this.date = date; }
-
-    public Time getTime() { return time; }
-    public void setTime(Time time) { this.time = time; }
-
-    public String getTechnicianTP() { return technicianTP; }
-    public void setTechnicianTP(String technicianTP) { this.technicianTP = technicianTP; }
-
-    public String getCounterStaffTP() { return counterStaffTP; }
-    public void setCounterStaffTP(String counterStaffTP) { this.counterStaffTP = counterStaffTP; }
-
-    public String getFeedbackText() { return feedbackText; }
-    public void setFeedbackText(String feedbackText) { this.feedbackText = feedbackText; }
+    private String requireNonBlank(String value, String fieldName) {
+        if (value == null || value.trim().isEmpty()) {
+            throw new IllegalArgumentException(fieldName + " cannot be blank");
+        }
+        return value.trim();
+    }
 }
+

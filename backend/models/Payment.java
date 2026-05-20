@@ -4,20 +4,19 @@ import backend.models.enums.PaymentMethod;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-
 public class Payment {
 
     private String paymentId;
     private String appointmentId;
-    private int price;
+    private int amount;
     private PaymentMethod paymentMethod;
     private LocalDateTime paidDateTime;
     private String receiptNumber;
 
-    public Payment(String paymentId, String appointmentId, int price, PaymentMethod paymentMethod, LocalDateTime paidDateTime, String receiptNumber) {
+    public Payment(String paymentId, String appointmentId, int amount, PaymentMethod paymentMethod, LocalDateTime paidDateTime, String receiptNumber) {
         setPaymentId(paymentId);
         setAppointmentId(appointmentId);
-        setprice(price);
+        setAmount(amount);
         setPaymentMethod(paymentMethod);
         setPaidDateTime(paidDateTime);
         setReceiptNumber(receiptNumber);
@@ -39,15 +38,15 @@ public class Payment {
         this.appointmentId = requireNonBlank(appointmentId, "Appointment ID");
     }
 
-    public int getprice() {
-        return price;
+    public int getAmount() {
+        return amount;
     }
 
-    public void setprice(int price) {
-        if (price < 0) {
-            throw new IllegalArgumentException("price cannot be negative");
+    public void setAmount(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount cannot be negative");
         }
-        this.price = price;
+        this.amount = amount;
     }
 
     public PaymentMethod getPaymentMethod() {

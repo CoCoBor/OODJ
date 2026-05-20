@@ -8,8 +8,8 @@ public class Technician extends User {
     private String specialization;
 
 
-    public Technician(String userTp, String username, String password, String email, String phone, String specialization, Boolean isAvailable) {
-        super(userTp, username, password, email, phone, Role.TECHNICIAN);
+    public Technician(String userId, String username, String password, String email, String phone, String specialization, Boolean isAvailable) {
+        super(userId, username, password, email, phone, Role.TECHNICIAN);
         setSpecialization(specialization);
         setIsAvailable(isAvailable);
     }

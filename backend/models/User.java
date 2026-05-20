@@ -1,19 +1,22 @@
 package backend.models;
 
 import backend.models.enums.Role;
+import java.security.MessageDigest;
+import java.util.Base64;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public abstract class User {
 
-    private String userTp;
+    private String userId;
     private String username;
     private String password;
     private String email;
     private String phone;
     private Role role;
 
-    public User(String userTp, String username, String password, String email, String phone, Role role) {
-        setuserTp(userTp);
+    public User(String userId, String username, String password, String email, String phone, Role role) {
+        setUserId(userId);
         setUsername(username);
         setPassword(password);
         setEmail(email);
@@ -21,12 +24,12 @@ public abstract class User {
         setRole(role);
     }
 
-    public String getuserTp() {
-        return userTp;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setuserTp(String userTp) {
-        this.userTp = requireNonBlank(userTp, "userTp");
+    public void setUserId(String userId) {
+        this.userId = requireNonBlank(userId, "userId");
     }
 
     public String getUsername() {
@@ -50,7 +53,11 @@ public abstract class User {
     }
 
     public void setEmail(String email) {
-        this.email = requireNonBlank(email, "email");
+        String emailChecking = requireNonBlank(email, "email");
+        System.out.println("debugging1 email: " + email); // Debug statement
+        System.out.println("debugging2 email: " + emailChecking); // Debug statement
+        validateEmail(emailChecking);
+        this.email = emailChecking;
     }
 
     public String getPhone() {
@@ -67,6 +74,25 @@ public abstract class User {
 
     public void setRole(Role role) {
         this.role = Objects.requireNonNull(role, "role cannot be null");
+    }
+
+    public static String hashPassword(String password) throws Exception {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+
+            byte[] hashBytes = md.digest(password.getBytes());
+
+            return Base64.getEncoder().encodeToString(hashBytes);
+        } catch (Exception e) {
+            throw new RuntimeException("Hashing failed", e);
+        }
+    }
+
+    private void validateEmail(String email) {
+        Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[cC][oO][mM]$");
+        if (!EMAIL_PATTERN.matcher(email).matches()) {
+            throw new IllegalArgumentException("Invalid email format");
+        }
     }
 
     protected String requireNonBlank(String value, String fieldName) {

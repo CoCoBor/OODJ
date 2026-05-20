@@ -1,116 +1,124 @@
 package backend.models;
 
 import backend.models.enums.AppointmentStatus;
-import java.sql.Time;
-import java.util.Date;
+import backend.models.enums.ServiceType;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Appointment {
+
     private String appointmentId;
-    private String customerTP;
-    private String plate;
-    private String service;
-    private String technicianTP;
-    private String counterStaffTP;
-    private Date date;
-    private Time time;
+    private String customerId;
+    private String technicianId;
+    private String counterStaffId;
+    private ServiceType serviceType;
     private AppointmentStatus status;
-    private Boolean paymentStatus;
+    private LocalDateTime scheduledStartDateTime;
+    private LocalDateTime expectedEndDateTime;
+    private LocalDateTime appointmentCreated;
+    private String notes;
 
+    public Appointment(String appointmentId, String customerId, String technicianId, String counterStaffId, ServiceType serviceType, AppointmentStatus status, LocalDateTime scheduledStartDateTime, LocalDateTime expectedEndDateTime, LocalDateTime appointmentCreated, String notes) {
+        setAppointmentId(appointmentId);
+        setCustomerId(customerId);
+        setTechnicianId(technicianId);
+        setCounterStaffId(counterStaffId);
+        setServiceType(serviceType);
+        setStatus(status);
+        setScheduledStartDateTime(scheduledStartDateTime);
+        setExpectedEndDateTime(expectedEndDateTime);
+        setAppointmentCreatedTime(appointmentCreated);
+        setNotes(notes);
+    }
 
-public Appointment(String appointmentId, String customerTP, String plate, String service, String technicianTP, String counterStaffTP, Date date, Time time, AppointmentStatus status, Boolean paymentStatus) {
-    this.appointmentId = appointmentId;
-    this.customerTP = customerTP;
-    this.plate = plate;
-    this.service = service;
-    this.technicianTP = technicianTP;
-    this.counterStaffTP = counterStaffTP;
-    this.date = date;
-    this.time = time;
-    this.status = status;
-    this.paymentStatus = paymentStatus;
-}
- 
     public String getAppointmentId() {
         return appointmentId;
-    }
-
-    public String getCustomerTP() {
-        return customerTP;
-    }
-
-    public String getPlate() {
-        return plate;
-    }
-
-    public String getService() {
-        return service;
-    }
-
-    public String getTechnicianTP() {
-        return technicianTP;
-    }
-
-    public String getCounterStaffTP() {
-        return counterStaffTP;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public Time getTime() {
-        return time;
-    }
-
-    public AppointmentStatus getStatus() {
-        return status;
-    }
-
-    public Boolean getPaymentStatus() {
-        return paymentStatus;
     }
 
     public void setAppointmentId(String appointmentId) {
         this.appointmentId = requireNonBlank(appointmentId, "Appointment ID");
     }
 
-    public void setCustomerTP(String customerTP) {
-        this.customerTP = requireNonBlank(customerTP, "Customer TP");
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setPlate(String plate) {
-        this.plate = requireNonBlank(plate, "Plate");
+    public void setCustomerId(String customerId) {
+        this.customerId = requireNonBlank(customerId, "Customer ID");
     }
 
-    public void setService(String service) {
-        this.service = requireNonBlank(service, "Service");
+    public String getTechnicianId() {
+        return technicianId;
     }
 
-    public void setTechnicianTP(String technicianTP) {
-        this.technicianTP = requireNonBlank(technicianTP, "Technician TP");
+    public void setTechnicianId(String technicianId) {
+        if (technicianId == null) {
+            this.technicianId = "";
+            return;
+        }
+        this.technicianId = technicianId.trim();
     }
 
-    public void setCounterStaffTP(String counterStaffTP) {
-        this.counterStaffTP = requireNonBlank(counterStaffTP, "Counter Staff TP");
+    public String getCounterStaffId() {
+        return counterStaffId;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCounterStaffId(String counterStaffId) {
+        this.counterStaffId = requireNonBlank(counterStaffId, "Counter Staff ID");
     }
 
-    public void setTime(Time time) {
-        this.time = time;
+    public ServiceType getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(ServiceType serviceType) {
+        this.serviceType = Objects.requireNonNull(serviceType, "Service Type cannot be null");
+    }
+
+    public AppointmentStatus getStatus() {
+        return status;
     }
 
     public void setStatus(AppointmentStatus status) {
-        this.status = status;
+        this.status = Objects.requireNonNull(status, "Status cannot be null");
     }
 
-    public void setPaymentStatus(Boolean paymentStatus) {
-        this.paymentStatus = paymentStatus;
+    public LocalDateTime getScheduledStartDateTime() {
+        return scheduledStartDateTime;
     }
 
-    protected String requireNonBlank(String value, String fieldName) {
+    public void setScheduledStartDateTime(LocalDateTime scheduledStartDateTime) {
+        this.scheduledStartDateTime = Objects.requireNonNull(scheduledStartDateTime, "Scheduled Start Date Time cannot be null");
+    }
+
+    public LocalDateTime getExpectedEndDateTime() {
+        return expectedEndDateTime;
+    }
+
+    public void setExpectedEndDateTime(LocalDateTime expectedEndDateTime) {
+        this.expectedEndDateTime = Objects.requireNonNull(expectedEndDateTime, "Expected End Date Time cannot be null");
+        if (this.scheduledStartDateTime != null && expectedEndDateTime.isBefore(this.scheduledStartDateTime)) {
+            throw new IllegalArgumentException("Expected End Date Time cannot be before Scheduled Start Date Time");
+        }
+    }
+
+    public LocalDateTime getAppointmentCreatedTime() {
+        return appointmentCreated;
+    }
+
+    public void setAppointmentCreatedTime(LocalDateTime appointmentCreatedTime) {
+        this.appointmentCreated = Objects.requireNonNull(appointmentCreatedTime, "Appointment Created cannot be null");
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes == null ? "" : notes.trim();
+    }
+
+    private String requireNonBlank(String value, String fieldName) {
         if (value == null || value.trim().isEmpty()) {
             throw new IllegalArgumentException(fieldName + " cannot be blank");
         }

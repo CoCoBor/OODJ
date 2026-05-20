@@ -1,8 +1,8 @@
-package backend.models;
+package backend.models.enums;
 
 public enum Role {
     MANAGER,
-    COUNTER,
+    COUNTER_STAFF,
     TECHNICIAN,
     CUSTOMER
 }
