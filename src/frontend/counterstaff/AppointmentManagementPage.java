@@ -1,5 +1,14 @@
-package src.text.frontend.counterstaff;
+package frontend.counterstaff;
 
+import backend.models.Appointment;
+import backend.models.Technician;
+import backend.models.User;
+import backend.models.enums.AppointmentStatus;
+import backend.models.enums.Role;
+import backend.models.enums.ServiceType;
+import backend.repository.UserRepository;
+import backend.service.AppoinmentService;
+import backend.service.ServiceException;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,15 +21,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import models.Appointment;
-import models.Technician;
-import models.User;
-import models.enums.AppointmentStatus;
-import models.enums.Role;
-import models.enums.ServiceType;
-import repository.UserRepository;
-import service.AppoinmentService;
-import service.ServiceException;
 
 public class AppointmentManagementPage extends JPanel {
 

@@ -1,14 +1,13 @@
-package src.backend.service;
+package backend.service;
 
+import backend.models.ServicePrice;
+import backend.models.enums.ServiceType;
+import backend.repository.ServicePriceRepository;
+import backend.util.IdGenerator;
+import backend.util.SessionManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import src.backend.models.ServicePrice;
-import src.backend.models.enums.ServiceType;
-import src.backend.repository.ServicePriceRepository;
-import src.backend.util.IdGenerator;
-import src.backend.util.SessionManager;
 
 public class ServicePriceService {
     private final SessionManager sessionManager;

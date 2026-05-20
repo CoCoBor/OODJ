@@ -1,9 +1,8 @@
-package src.backend.models;
+package backend.models;
 
+import backend.models.enums.ServiceType;
 import java.time.LocalDateTime;
 import java.util.Objects;
-
-import src.backend.models.enums.ServiceType;
 
 public class ServicePrice {
     private String priceId;

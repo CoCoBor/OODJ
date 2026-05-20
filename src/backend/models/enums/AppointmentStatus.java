@@ -1,8 +1,9 @@
-package src.backend.models.enums;
+package backend.models.enums;
 
 public enum AppointmentStatus {
     PENDING,
     CONFIRMED,
+    IN_PROGRESS,
     COMPLETED,
     CANCELLED
 }

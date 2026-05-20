@@ -1,5 +1,7 @@
-package src.backend.repository;
+package backend.repository;
 
+import backend.models.Payment;
+import backend.models.enums.PaymentMethod;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,12 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import src.backend.models.Payment;
-import src.backend.models.enums.PaymentMethod;
-
 public class PaymentRepository implements InterfaceRepo<Payment> {
 
-    private static final String FILE_PATH = "src/data/payments.txt";
+    private static final String FILE_PATH = "src/text/payments.txt";
 
     @Override
     public void save(Payment payment) {

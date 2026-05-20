@@ -1,4 +1,4 @@
-package src.backend.service;
+package backend.service;
 
 public class ServiceException extends RuntimeException {
     public ServiceException(String message) {

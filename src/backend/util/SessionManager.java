@@ -1,7 +1,7 @@
-package src.backend.util;
+package backend.util;
 
-import models.User;
-import models.enums.Role;
+import backend.models.User;
+import backend.models.enums.Role;
 public class SessionManager {
     private static SessionManager instance;
     private User currentUser;

@@ -1,20 +1,20 @@
-package src.text.frontend;
+package frontend;
 
+import backend.repository.AppointmentRepository;
+import backend.repository.FeedbackRepository;
+import backend.repository.PaymentRepository;
+import backend.repository.ServicePriceRepository;
+import backend.repository.UserRepository;
+import backend.service.AppoinmentService;
+import backend.service.AuthService;
+import backend.service.FeedbackService;
+import backend.service.PaymentService;
+import backend.service.ServicePriceService;
+import backend.service.UserService;
+import backend.util.SessionManager;
+import frontend.auth.LoginPage;
 import java.awt.*;
 import javax.swing.*;
-import repository.AppointmentRepository;
-import repository.FeedbackRepository;
-import repository.PaymentRepository;
-import repository.ServicePriceRepository;
-import repository.UserRepository;
-import service.AppoinmentService;
-import service.AuthService;
-import service.FeedbackService;
-import service.PaymentService;
-import service.ServicePriceService;
-import service.UserService;
-import src.text.frontend.auth.LoginPage;
-import util.SessionManager;
 
 public class MainPage extends JFrame {
 

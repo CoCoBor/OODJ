@@ -1,25 +1,25 @@
-package src.text.frontend;
+package frontend;
 
+import backend.models.User;
+import backend.models.enums.Role;
+import backend.repository.UserRepository;
+import backend.service.UserService;
+import frontend.counterstaff.AppointmentManagementPage;
+import frontend.counterstaff.CustomerManagementPage;
+import frontend.customer.ViewServiceHistoryPage;
+import frontend.manager.StaffManagementPage;
+import frontend.technician.UpdateAppointmentPage;
 import java.awt.*;
 import javax.swing.*;
-import models.User;
-import models.enums.Role;
-import repository.UserRepository;
-import service.UserService;
-import src.text.frontend.counterstaff.AppointmentManagementPage;
-import src.text.frontend.counterstaff.CustomerManagementPage;
-import src.text.frontend.customer.ViewServiceHistoryPage;
-import src.text.frontend.manager.StaffManagementPage;
-import src.text.frontend.technician.UpdateAppointmentPage;
 
 public class DashboardPage extends JPanel {
     private final JTabbedPane tabbedPane;
     private final JLabel userStatusLabel;
     private final MainPage app;
     private UserRepository userRepository;
-    private service.ServicePriceService servicePriceService;
-    private service.PaymentService paymentService;
-    private service.FeedbackService feedbackService;
+    private backend.service.ServicePriceService servicePriceService;
+    private backend.service.PaymentService paymentService;
+    private backend.service.FeedbackService feedbackService;
 
     public DashboardPage(MainPage app) {
         this.app = app;
@@ -43,9 +43,9 @@ public class DashboardPage extends JPanel {
         add(tabbedPane, BorderLayout.CENTER);
     }
 
-    public void setServicePriceService(service.ServicePriceService s) { this.servicePriceService = s; }
-    public void setPaymentService(service.PaymentService s) { this.paymentService = s; }
-    public void setFeedbackService(service.FeedbackService s) { this.feedbackService = s; }
+    public void setServicePriceService(backend.service.ServicePriceService s) { this.servicePriceService = s; }
+    public void setPaymentService(backend.service.PaymentService s) { this.paymentService = s; }
+    public void setFeedbackService(backend.service.FeedbackService s) { this.feedbackService = s; }
 
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -62,13 +62,13 @@ public class DashboardPage extends JPanel {
         if (role == Role.MANAGER) {
             tabbedPane.addTab("Staff Management", new StaffManagementPage(userService));
             if (paymentService != null) {
-                tabbedPane.addTab("Payment History", new src.text.frontend.manager.ViewPaymentHistoryPage(paymentService));
+                tabbedPane.addTab("Payment History", new frontend.manager.ViewPaymentHistoryPage(paymentService));
             }
             if (servicePriceService != null) {
-                tabbedPane.addTab("Set Prices", new src.text.frontend.manager.SetPricePage(servicePriceService));
+                tabbedPane.addTab("Set Prices", new frontend.manager.SetPricePage(servicePriceService));
             }
             if (feedbackService != null) {
-                tabbedPane.addTab("View Comments", new src.text.frontend.manager.ViewCommentPage(feedbackService));
+                tabbedPane.addTab("View Comments", new frontend.manager.ViewCommentPage(feedbackService));
             }
             // tabbedPane.addTab("Customer Approval", new CustomerApprovalPanel());
             // tabbedPane.addTab("Reports", new ReportsPanel());
@@ -78,7 +78,7 @@ public class DashboardPage extends JPanel {
             tabbedPane.addTab("Customer Management", new CustomerManagementPage(userService));
             tabbedPane.addTab("Appointment Management", new AppointmentManagementPage(app.getAppointmentService(), userRepository));
             if (paymentService != null && servicePriceService != null) {
-                tabbedPane.addTab("Payments", new src.text.frontend.counterstaff.PaymentPage(paymentService, servicePriceService));
+                tabbedPane.addTab("Payments", new frontend.counterstaff.PaymentPage(paymentService, servicePriceService));
             }
             // tabbedPane.addTab("Customer Records", new CustomerRecordsPanel());
         }
@@ -90,10 +90,10 @@ public class DashboardPage extends JPanel {
         if (role == Role.CUSTOMER) {
             tabbedPane.addTab("Service History", new ViewServiceHistoryPage(app.getAppointmentService(), user.getUserId()));
             if (paymentService != null) {
-                tabbedPane.addTab("Payment History", new src.text.frontend.customer.ViewPaymentHistoryPage(paymentService, user.getUserId()));
+                tabbedPane.addTab("Payment History", new frontend.customer.ViewPaymentHistoryPage(paymentService, user.getUserId()));
             }
             if (feedbackService != null && paymentService != null) {
-                tabbedPane.addTab("Feedback", new src.text.frontend.customer.FeedbackPage(feedbackService, paymentService, user.getUserId()));
+                tabbedPane.addTab("Feedback", new frontend.customer.FeedbackPage(feedbackService, paymentService, user.getUserId()));
             }
         }
 

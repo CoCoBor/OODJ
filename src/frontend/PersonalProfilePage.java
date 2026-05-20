@@ -1,11 +1,11 @@
-package src.text.frontend;
+package frontend;
 
 import java.awt.*;
 import javax.swing.*;
-import models.User;
-import service.ServiceException;
-import service.UserService;
-import util.SessionManager;
+import backend.models.User;
+import backend.service.ServiceException;
+import backend.service.UserService;
+import backend.util.SessionManager;
 
 public class PersonalProfilePage extends JPanel {
 

@@ -1,12 +1,12 @@
-package src.text.frontend.manager;
+package frontend.manager;
 
+import backend.models.CustomerFeedback;
+import backend.service.FeedbackService;
+import backend.service.ServiceException;
 import java.awt.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import models.CustomerFeedback;
-import service.FeedbackService;
-import service.ServiceException;
 
 public class ViewCommentPage extends JPanel {
 

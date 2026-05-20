@@ -1,22 +1,21 @@
-package src.backend.service;
+package backend.service;
 
+import backend.models.Appointment;
+import backend.models.Payment;
+import backend.models.ServicePrice;
+import backend.models.enums.AppointmentStatus;
+import backend.models.enums.PaymentMethod;
+import backend.models.enums.ServiceType;
+import backend.repository.AppointmentRepository;
+import backend.repository.PaymentRepository;
+import backend.repository.ServicePriceRepository;
+import backend.util.IdGenerator;
+import backend.util.SessionManager;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import src.backend.models.Appointment;
-import src.backend.models.Payment;
-import src.backend.models.ServicePrice;
-import src.backend.models.enums.AppointmentStatus;
-import src.backend.models.enums.PaymentMethod;
-import src.backend.models.enums.ServiceType;
-import src.backend.repository.AppointmentRepository;
-import src.backend.repository.PaymentRepository;
-import src.backend.repository.ServicePriceRepository;
-import src.backend.util.IdGenerator;
-import src.backend.util.SessionManager;
 
 public class PaymentService {
 

@@ -1,4 +1,4 @@
-package src.backend.repository;
+package backend.repository;
 
 import java.util.List;
 import java.util.Optional;

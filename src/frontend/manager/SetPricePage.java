@@ -1,13 +1,13 @@
-package src.text.frontend.manager;
+package frontend.manager;
 
+import backend.models.ServicePrice;
+import backend.models.enums.ServiceType;
+import backend.service.ServiceException;
+import backend.service.ServicePriceService;
 import java.awt.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import models.ServicePrice;
-import models.enums.ServiceType;
-import service.ServiceException;
-import service.ServicePriceService;
 
 public class SetPricePage extends JPanel {
 

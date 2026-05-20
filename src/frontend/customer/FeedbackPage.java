@@ -1,15 +1,15 @@
-package src.text.frontend.customer;
+package frontend.customer;
 
+import backend.models.CustomerFeedback;
+import backend.models.Payment;
+import backend.service.FeedbackService;
+import backend.service.PaymentService;
+import backend.service.ServiceException;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import models.CustomerFeedback;
-import models.Payment;
-import service.FeedbackService;
-import service.PaymentService;
-import service.ServiceException;
 
 public class FeedbackPage extends JPanel {
 

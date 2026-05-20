@@ -1,11 +1,10 @@
-package src.backend.models;
+package backend.models;
 
+import backend.models.enums.Role;
 import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.Objects;
 import java.util.regex.Pattern;
-
-import src.backend.models.enums.Role;
 
 public abstract class User {
 

@@ -1,4 +1,4 @@
-package src.text.frontend.technician;
+package frontend.technician;
 
 public class ViewCommentPage {
     

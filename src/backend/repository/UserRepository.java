@@ -1,5 +1,11 @@
-package src.backend.repository;
+package backend.repository;
 
+import backend.models.CounterStaff;
+import backend.models.Customer;
+import backend.models.Manager;
+import backend.models.Technician;
+import backend.models.User;
+import backend.models.enums.Role;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,16 +16,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import src.backend.models.CounterStaff;
-import src.backend.models.Customer;
-import src.backend.models.Manager;
-import src.backend.models.Technician;
-import src.backend.models.User;
-import src.backend.models.enums.Role;
-
 public class UserRepository implements InterfaceRepo<User> {
 
-    private static final String FILE_PATH = "src/data/users.txt";
+    private static final String FILE_PATH = "src/text/users.txt";
 
     @Override
     public void save(User user) {

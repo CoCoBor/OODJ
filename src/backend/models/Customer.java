@@ -1,6 +1,6 @@
-package src.backend.models;
+package backend.models;
     
-import src.backend.models.enums.Role;
+import backend.models.enums.Role;
 
 public class Customer extends User {
     private String vehicleModel;

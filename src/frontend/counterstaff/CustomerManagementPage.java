@@ -1,15 +1,15 @@
-package src.text.frontend.counterstaff;
+package frontend.counterstaff;
 
+import backend.models.Customer;
+import backend.models.User;
+import backend.models.enums.Role;
+import backend.service.ServiceException;
+import backend.service.UserService;
 import java.awt.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import models.Customer;
-import models.User;
-import models.enums.Role;
-import service.ServiceException;
-import service.UserService;
 
 public class CustomerManagementPage extends JPanel {
 

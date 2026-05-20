@@ -1,20 +1,19 @@
-package src.backend.service;
+package backend.service;
 
+import backend.models.Appointment;
+import backend.models.Technician;
+import backend.models.User;
+import backend.models.enums.AppointmentStatus;
+import backend.models.enums.Role;
+import backend.models.enums.ServiceType;
+import backend.repository.AppointmentRepository;
+import backend.repository.UserRepository;
+import backend.util.IdGenerator;
+import backend.util.SessionManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import src.backend.models.Appointment;
-import src.backend.models.Technician;
-import src.backend.models.User;
-import src.backend.models.enums.AppointmentStatus;
-import src.backend.models.enums.Role;
-import src.backend.models.enums.ServiceType;
-import src.backend.repository.AppointmentRepository;
-import src.backend.repository.UserRepository;
-import src.backend.util.IdGenerator;
-import src.backend.util.SessionManager;
 
 public class AppoinmentService {
 

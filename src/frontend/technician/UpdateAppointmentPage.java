@@ -1,4 +1,4 @@
-package src.text.frontend.technician;
+package frontend.technician;
 
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
@@ -9,10 +9,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import models.Appointment;
-import models.enums.AppointmentStatus;
-import service.AppoinmentService;
-import service.ServiceException;
+import backend.models.Appointment;
+import backend.models.enums.AppointmentStatus;
+import backend.service.AppoinmentService;
+import backend.service.ServiceException;
 
 public class UpdateAppointmentPage extends JPanel {
 

@@ -1,15 +1,15 @@
-package src.text.frontend.counterstaff;
+package frontend.counterstaff;
 
+import backend.models.Appointment;
+import backend.models.Payment;
+import backend.models.enums.PaymentMethod;
+import backend.service.PaymentService;
+import backend.service.ServiceException;
+import backend.service.ServicePriceService;
 import java.awt.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import models.Appointment;
-import models.Payment;
-import models.enums.PaymentMethod;
-import service.PaymentService;
-import service.ServiceException;
-import service.ServicePriceService;
 
 public class PaymentPage extends JPanel {
 

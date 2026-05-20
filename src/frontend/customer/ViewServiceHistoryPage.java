@@ -1,15 +1,15 @@
-package src.text.frontend.customer;
+package frontend.customer;
 
+import backend.models.Appointment;
+import backend.models.enums.AppointmentStatus;
+import backend.service.AppoinmentService;
+import backend.service.ServiceException;
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import models.Appointment;
-import models.enums.AppointmentStatus;
-import service.AppoinmentService;
-import service.ServiceException;
 
 public class ViewServiceHistoryPage extends JPanel {
 

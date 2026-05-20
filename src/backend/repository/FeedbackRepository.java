@@ -1,6 +1,7 @@
-package src.backend.repository;
+package backend.repository;
 
 
+import backend.models.CustomerFeedback;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,10 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import src.backend.models.CustomerFeedback;
-
 public class FeedbackRepository implements InterfaceRepo<CustomerFeedback> {
-    private static final String FILE_PATH = "src/data/feedback.txt";
+    private static final String FILE_PATH = "src/text/feedback.txt";
 
     @Override
     public void save(CustomerFeedback entity) {

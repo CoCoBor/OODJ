@@ -1,5 +1,7 @@
-package src.backend.repository;
+package backend.repository;
 
+import backend.models.ServicePrice;
+import backend.models.enums.ServiceType;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,11 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import src.backend.models.ServicePrice;
-import src.backend.models.enums.ServiceType;
-
 public class ServicePriceRepository implements InterfaceRepo<ServicePrice> {
-    private static final String FILE_PATH = "src/data/service_prices.txt";
+    private static final String FILE_PATH = "src/text/service_prices.txt";
 
     @Override
     public void save(ServicePrice servicePrice) {

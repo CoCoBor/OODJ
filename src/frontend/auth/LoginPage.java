@@ -1,6 +1,9 @@
-package src.text.frontend.auth;
+package frontend.auth;
 
 
+import backend.models.User;
+import frontend.DashboardPage;
+import frontend.MainPage;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.JButton;
@@ -9,9 +12,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import models.User;
-import src.text.frontend.DashboardPage;
-import src.text.frontend.MainPage;
 
 public class LoginPage extends JPanel {
 
@@ -52,7 +52,7 @@ public class LoginPage extends JPanel {
                 dashboard.setupDashboard(user, app.getUserService());
                 JOptionPane.showMessageDialog(this, "Welcome, " + user.getUsername());
                 app.showPage("DASHBOARD");
-            } catch (service.ServiceException ex) {
+            } catch (backend.service.ServiceException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "An unexpected error occurred", "System Error", JOptionPane.ERROR_MESSAGE);

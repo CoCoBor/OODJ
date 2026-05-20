@@ -1,4 +1,4 @@
-package src.backend.models.enums;
+package backend.models.enums;
 
 public enum ServiceType {
     NORMAL_SERVICE,

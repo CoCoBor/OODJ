@@ -1,8 +1,8 @@
-package src.backend.service;
+package backend.service;
 
-import src.backend.models.User;
-import src.backend.repository.UserRepository;
-import src.backend.util.SessionManager;
+import backend.models.User;
+import backend.repository.UserRepository;
+import backend.util.SessionManager;
 
 public class AuthService {
 

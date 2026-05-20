@@ -1,4 +1,4 @@
-package src.text.frontend.manager;
+package frontend.manager;
 
 public class AnalyzeReportPage {
     

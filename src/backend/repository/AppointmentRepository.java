@@ -1,6 +1,9 @@
-package src.backend.repository;
+package backend.repository;
 
 
+import backend.models.Appointment;
+import backend.models.enums.AppointmentStatus;
+import backend.models.enums.ServiceType;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,13 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import src.backend.models.Appointment;
-import src.backend.models.enums.AppointmentStatus;
-import src.backend.models.enums.ServiceType;
-
 public class AppointmentRepository implements InterfaceRepo<Appointment> {
 
-    private static final String FILE_PATH = "src/data/appointments.txt";
+    private static final String FILE_PATH = "src/text/appointments.txt";
 
     @Override
     public void save(Appointment appointment) {
