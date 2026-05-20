@@ -1,5 +1,8 @@
 package backend.models;
 
+import java.sql.Time;
+import java.util.Date;
+
 public class Receipt {
     private String receiptId;
     private String customerName;
@@ -7,13 +10,13 @@ public class Receipt {
     private String plate;
     private String service;
     private int price;
-    private String date;
-    private String time;
+    private Date date;
+    private Time time;
     private String technician;
 
     public Receipt() {}
 
-    public Receipt(String receiptId, String customerName, String customerTP, String plate, String service, int price, String date, String time, String technician) {
+    public Receipt(String receiptId, String customerName, String customerTP, String plate, String service, int price, Date date, Time time, String technician) {
         this.receiptId = receiptId;
         this.customerName = customerName;
         this.customerTP = customerTP;
@@ -43,11 +46,11 @@ public class Receipt {
     public int getPrice() { return price; }
     public void setPrice(int price) { this.price = price; }
 
-    public String getDate() { return date; }
-    public void setDate(String date) { this.date = date; }
+    public Date getDate() { return date; }
+    public void setDate(Date date) { this.date = date; }
 
-    public String getTime() { return time; }
-    public void setTime(String time) { this.time = time; }
+    public Time getTime() { return time; }
+    public void setTime(Time time) { this.time = time; }
 
     public String getTechnician() { return technician; }
     public void setTechnician(String technician) { this.technician = technician; }

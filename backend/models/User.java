@@ -1,32 +1,78 @@
 package backend.models;
 
-public class User {
+import backend.models.enums.Role;
+import java.util.Objects;
 
-    private String name;
-    private final String tp;
-    private String phone;
+public abstract class User {
+
+    private String userTp;
+    private String username;
     private String password;
-    private String role;
+    private String email;
+    private String phone;
+    private Role role;
 
-    // Constructor
-    public User(String name, String tp, String phone, String password, String role) {
-        this.name = name;
-        this.tp = tp;
-        this.phone = phone;
-        this.password = password;
-        this.role = role;
+    public User(String userTp, String username, String password, String email, String phone, Role role) {
+        setuserTp(userTp);
+        setUsername(username);
+        setPassword(password);
+        setEmail(email);
+        setPhone(phone);
+        setRole(role);
     }
 
-    // GETTERS
-    public String getName() { return name; }
-    public String getTp() { return tp; }
-    public String getPhone() { return phone; }
-    public String getPassword() { return password; }
-    public String getRole() { return role; }
+    public String getuserTp() {
+        return userTp;
+    }
 
-    // SETTERS
-    public void setName(String name) { this.name = name; }
-    public void setPhone(String phone) { this.phone = phone; }
-    public void setPassword(String password) { this.password = password; }
-    public void setRole(String role) { this.role = role; }
+    public void setuserTp(String userTp) {
+        this.userTp = requireNonBlank(userTp, "userTp");
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = requireNonBlank(username, "username");
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = requireNonBlank(password, "password");
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = requireNonBlank(email, "email");
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = requireNonBlank(phone, "phone");
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = Objects.requireNonNull(role, "role cannot be null");
+    }
+
+    protected String requireNonBlank(String value, String fieldName) {
+        if (value == null || value.trim().isEmpty()) {
+            throw new IllegalArgumentException(fieldName + " cannot be blank");
+        }
+        return value.trim();
+    }
 }
