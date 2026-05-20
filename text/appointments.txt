@@ -1,4 +1,4 @@
-Kim (12395),12395,WXY1234,Major (3 Hours),Amy (12995),12995,2026-07-1,09:00,Completed,                          ,UNPAID
+Kim (12395),12395,WXY1234,Major (3 Hours),Amy (12995),12995,2026-07-1,09:00,Completed,                          ,PAID
 Jun (10094),10094,JJK123,Normal (1 Hour),Leni (12885),12885,2026-07-8,14:00,Completed,    ,PAID
 Jun (10094),10094,JJK123,Normal (1 Hour),Leni (12885),12885,2026-07-8,11:00,Completed,Love,PAID
 Jun (10094),10094,JJK123,Normal (1 Hour),Leni (12885),12885,2026-07-1,11:00,Completed,,PAID
