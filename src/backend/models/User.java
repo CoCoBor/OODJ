@@ -89,7 +89,7 @@ public abstract class User {
     }
 
     private void validateEmail(String email) {
-        Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[cC][oO][mM]$");
+        Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[c][o][m]$");
         if (!EMAIL_PATTERN.matcher(email).matches()) {
             throw new IllegalArgumentException("Invalid email format");
         }
