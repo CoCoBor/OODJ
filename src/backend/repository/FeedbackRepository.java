@@ -9,12 +9,13 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class FeedbackRepository implements InterfaceRepo<CustomerFeedback> {
-    private static final String FILE_PATH = "src/text/feedback.txt";
+    private static final String FILE_PATH = "src/text/feedbacks.txt";
 
     @Override
     public void save(CustomerFeedback entity) {
@@ -163,7 +164,7 @@ public class FeedbackRepository implements InterfaceRepo<CustomerFeedback> {
             LocalDateTime commentDateTime = parseDateTime(p[7]);
 
             return new CustomerFeedback(feedbackId, appointmentId, customerId, technicianId, counterStaffId, rating, comment, commentDateTime);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | DateTimeParseException e) {
             System.err.println("Error parsing feedback data: " + line + " - " + e.getMessage());
             return null;
         }

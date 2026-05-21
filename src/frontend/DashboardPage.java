@@ -7,6 +7,7 @@ import backend.service.UserService;
 import frontend.counterstaff.AppointmentManagementPage;
 import frontend.counterstaff.CustomerManagementPage;
 import frontend.customer.ViewServiceHistoryPage;
+import frontend.manager.AnalyzeReportPage;
 import frontend.manager.StaffManagementPage;
 import frontend.technician.UpdateAppointmentPage;
 import java.awt.*;
@@ -20,6 +21,7 @@ public class DashboardPage extends JPanel {
     private backend.service.ServicePriceService servicePriceService;
     private backend.service.PaymentService paymentService;
     private backend.service.FeedbackService feedbackService;
+    private backend.service.GenerateReportService reportService;
 
     public DashboardPage(MainPage app) {
         this.app = app;
@@ -46,6 +48,7 @@ public class DashboardPage extends JPanel {
     public void setServicePriceService(backend.service.ServicePriceService s) { this.servicePriceService = s; }
     public void setPaymentService(backend.service.PaymentService s) { this.paymentService = s; }
     public void setFeedbackService(backend.service.FeedbackService s) { this.feedbackService = s; }
+    public void setReportService(backend.service.GenerateReportService s) { this.reportService = s; }
 
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -70,8 +73,9 @@ public class DashboardPage extends JPanel {
             if (feedbackService != null) {
                 tabbedPane.addTab("View Comments", new frontend.manager.ViewCommentPage(feedbackService));
             }
-            // tabbedPane.addTab("Customer Approval", new CustomerApprovalPanel());
-            // tabbedPane.addTab("Reports", new ReportsPanel());
+            if (reportService != null) {
+                tabbedPane.addTab("Reports", new AnalyzeReportPage(reportService));
+            }
         }
         
         if (role == Role.COUNTER_STAFF) {

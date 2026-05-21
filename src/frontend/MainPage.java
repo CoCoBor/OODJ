@@ -8,6 +8,7 @@ import backend.repository.UserRepository;
 import backend.service.AppoinmentService;
 import backend.service.AuthService;
 import backend.service.FeedbackService;
+import backend.service.GenerateReportService;
 import backend.service.PaymentService;
 import backend.service.ServicePriceService;
 import backend.service.UserService;
@@ -26,6 +27,7 @@ public class MainPage extends JFrame {
     private final UserService userService;
     private final AppoinmentService appointmentService;
     private final UserRepository userRepository;
+    private final GenerateReportService generateReportService;
 
     public MainPage() {
         this.userRepository = new UserRepository();
@@ -42,6 +44,7 @@ public class MainPage extends JFrame {
         ServicePriceService priceService = new ServicePriceService(priceRepo, session);
         PaymentService paymentService = new PaymentService(session, priceRepo, apptRepo, paymentRepo);
         FeedbackService feedbackService = new FeedbackService(feedbackRepo, apptRepo, userRepository, session);
+        this.generateReportService = new GenerateReportService(feedbackRepo, apptRepo, userRepository, priceRepo, session);
         setTitle("Car Workshop System");
         setSize(800, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -54,6 +57,7 @@ public class MainPage extends JFrame {
         this.dashboardPage.setServicePriceService(priceService);
         this.dashboardPage.setPaymentService(paymentService);
         this.dashboardPage.setFeedbackService(feedbackService);
+        this.dashboardPage.setReportService(generateReportService);
         mainPanel.add(loginPage, "LOGIN");
         mainPanel.add(dashboardPage, "DASHBOARD");
 
