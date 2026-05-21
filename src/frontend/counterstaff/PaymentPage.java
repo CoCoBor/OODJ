@@ -20,10 +20,13 @@ public class PaymentPage extends JPanel {
     private JComboBox<PaymentMethod> paymentMethodCombo;
     private JLabel priceLabel;
     private JButton createBtn;
+    private JButton generateReceiptBtn;
+    private JButton refreshBtn;
     private JTable paymentsTable;
     private DefaultTableModel tableModel;
 
     private List<Appointment> availableAppointments;
+    private List<Payment> payments;
 
     public PaymentPage(PaymentService paymentService, ServicePriceService priceService) {
         this.paymentService = paymentService;
@@ -76,6 +79,16 @@ public class PaymentPage extends JPanel {
         };
         paymentsTable = new JTable(tableModel);
         add(new JScrollPane(paymentsTable), BorderLayout.CENTER);
+
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 8));
+        generateReceiptBtn = new JButton("Generate Receipt (Selected Payment)");
+        refreshBtn = new JButton("Refresh");
+        bottomPanel.add(generateReceiptBtn);
+        bottomPanel.add(refreshBtn);
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        generateReceiptBtn.addActionListener(e -> onGenerateReceiptFromSelectedPayment());
+        refreshBtn.addActionListener(e -> refreshPaymentsTable());
     }
 
     private void refreshAppointments() {
@@ -116,15 +129,8 @@ public class PaymentPage extends JPanel {
         Appointment sel = availableAppointments.get(idx);
         PaymentMethod method = (PaymentMethod) paymentMethodCombo.getSelectedItem();
         try {
-            Payment p = paymentService.CreatePayment(sel.getAppointmentId(), method);
-            String receipt = paymentService.generateReceipt(p);
-            JTextArea receiptArea = new JTextArea(receipt);
-            receiptArea.setEditable(false);
-            receiptArea.setLineWrap(true);
-            receiptArea.setWrapStyleWord(true);
-            receiptArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-            receiptArea.setCaretPosition(0);
-            JOptionPane.showMessageDialog(this, new JScrollPane(receiptArea), "Payment Created\nReceipt", JOptionPane.INFORMATION_MESSAGE);
+            paymentService.CreatePayment(sel.getAppointmentId(), method);
+            JOptionPane.showMessageDialog(this, "Payment created successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
             refreshAppointments();
             refreshPaymentsTable();
         } catch (ServiceException ex) {
@@ -132,9 +138,38 @@ public class PaymentPage extends JPanel {
         }
     }
 
+    private void onGenerateReceiptFromSelectedPayment() {
+        int selectedRow = paymentsTable.getSelectedRow();
+        if (selectedRow < 0 || payments == null || selectedRow >= payments.size()) {
+            JOptionPane.showMessageDialog(this, "Please select a payment row first.", "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Payment selectedPayment = payments.get(selectedRow);
+        try {
+            String receipt = paymentService.generateReceipt(selectedPayment);
+            showReceiptDialog(receipt);
+        } catch (ServiceException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void showReceiptDialog(String receipt) {
+        JTextArea receiptArea = new JTextArea(receipt);
+        receiptArea.setEditable(false);
+        receiptArea.setLineWrap(true);
+        receiptArea.setWrapStyleWord(true);
+        receiptArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
+        receiptArea.setCaretPosition(0);
+
+        JScrollPane scrollPane = new JScrollPane(receiptArea);
+        scrollPane.setPreferredSize(new Dimension(700, 500));
+        JOptionPane.showMessageDialog(this, scrollPane, "Payment Receipt", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     private void refreshPaymentsTable() {
         tableModel.setRowCount(0);
-        List<Payment> payments = paymentService.getAllPayments();
+        payments = paymentService.getAllPayments();
         for (Payment p : payments) {
             tableModel.addRow(new Object[]{p.getPaymentId(), p.getAppointmentId(), p.getAmount(), p.getPaymentMethod(), p.getPaidDateTime(), p.getReceiptNumber()});
         }
