@@ -64,6 +64,18 @@ public class FeedbackService {
         return matches;
     }
 
+    public List<CustomerFeedback> getTechnicianFeedback(String technicianId) {
+        String normalizedTechnicianId = requireNonBlank(technicianId, "Technician ID");
+        List<CustomerFeedback> matches = new ArrayList<>();
+        List<CustomerFeedback> feedbacks = feedbackRepository.findAll();
+        for (CustomerFeedback feedback : feedbacks) {
+            if (feedback.getTechnicianId().equals(normalizedTechnicianId)) {
+                matches.add(feedback);
+            }
+        }
+        return matches;
+    }
+
     private List<String> extractFeedbackIds(List<CustomerFeedback> feedbacks) {
         List<String> ids = new ArrayList<>();
         for (CustomerFeedback feedback : feedbacks) {

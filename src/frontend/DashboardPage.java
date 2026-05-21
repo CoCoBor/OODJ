@@ -89,6 +89,9 @@ public class DashboardPage extends JPanel {
 
         if (role == Role.TECHNICIAN) {
             tabbedPane.addTab("My Appointments", new UpdateAppointmentPage(app.getAppointmentService(), user.getUserId()));
+            if (feedbackService != null) {
+                tabbedPane.addTab("View Comments", new frontend.technician.ViewCommentPage(feedbackService, user.getUserId()));
+            }
         }
 
         if (role == Role.CUSTOMER) {
