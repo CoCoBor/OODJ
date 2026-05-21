@@ -28,6 +28,7 @@ public class CustomerManagementPage extends JPanel {
     private JButton createBtn = new JButton("Create Customer");
     private JButton updateBtn = new JButton("Update Selected");
     private JButton deleteBtn = new JButton("Delete Selected");
+    private JButton resetBtn = new JButton("Reset Password");
     private JButton clearBtn = new JButton("Clear");
 
     public CustomerManagementPage(UserService userService) {
@@ -65,10 +66,11 @@ public class CustomerManagementPage extends JPanel {
         addFormField(formPanel, "Vehicle Model:", vehicleModelField, gbc, row++);
         addFormField(formPanel, "Vehicle Plate:", vehiclePlateField, gbc, row++);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 2, 5, 5));
+        JPanel buttonPanel = new JPanel(new GridLayout(3, 2, 5, 5));
         buttonPanel.add(createBtn);
         buttonPanel.add(updateBtn);
         buttonPanel.add(deleteBtn);
+        buttonPanel.add(resetBtn);
         buttonPanel.add(clearBtn);
 
         gbc.gridx = 0;

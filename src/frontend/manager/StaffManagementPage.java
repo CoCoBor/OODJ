@@ -28,11 +28,12 @@ public class StaffManagementPage extends JPanel {
 
     // Extra fields specifically for Technician roles
     private JTextField specField = new JTextField(15);
-    private JCheckBox availBox = new JCheckBox("Is Available", true);
+    private JCheckBox availBox = new JCheckBox("Is Available", false);
 
     private JButton addBtn = new JButton("Add New");
     private JButton updateBtn = new JButton("Update Selected");
     private JButton deleteBtn = new JButton("Delete Selected");
+    private JButton resetBtn = new JButton("Reset Password");
     private JButton clearBtn = new JButton("Clear Form");
 
     public StaffManagementPage(UserService userService) {
@@ -80,10 +81,11 @@ public class StaffManagementPage extends JPanel {
         formPanel.add(availBox, gbc);
 
         // 3. Command Action Row Panel
-        JPanel btnPanel = new JPanel(new GridLayout(2, 2, 5, 5));
+        JPanel btnPanel = new JPanel(new GridLayout(3, 2, 5, 5));
         btnPanel.add(addBtn);
         btnPanel.add(updateBtn);
         btnPanel.add(deleteBtn);
+        btnPanel.add(resetBtn);
         btnPanel.add(clearBtn);
 
         gbc.gridx = 0;
@@ -95,6 +97,11 @@ public class StaffManagementPage extends JPanel {
         add(formPanel, BorderLayout.EAST);
 
         setupBusinessLogicListeners();
+        availBox.setEnabled(false);
+        // disable action buttons until a row is selected
+        updateBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
+        resetBtn.setEnabled(false);
         refreshTableData();
     }
 
@@ -131,25 +138,32 @@ public class StaffManagementPage extends JPanel {
             boolean isTech = roleCombo.getSelectedItem() == Role.TECHNICIAN;
             specField.setEnabled(isTech);
             availBox.setEnabled(isTech);
+            if (!isTech) {
+                availBox.setSelected(false);
+            }
         });
 
         // Row Selection synchronization
         staffTable.getSelectionModel().addListSelectionListener(e -> {
-            int row = staffTable.getSelectedRow();
-            if (row >= 0 && !e.getValueIsAdjusting()) {
-                idField.setText(tableModel.getValueAt(row, 0).toString());
-                nameField.setText(tableModel.getValueAt(row, 1).toString());
-                roleCombo.setSelectedItem(tableModel.getValueAt(row, 2));
-                emailField.setText(tableModel.getValueAt(row, 3).toString());
-                phoneField.setText(tableModel.getValueAt(row, 4).toString());
+            int viewRow = staffTable.getSelectedRow();
+            if (viewRow >= 0 && !e.getValueIsAdjusting()) {
+                int modelRow = staffTable.convertRowIndexToModel(viewRow);
+                idField.setText(tableModel.getValueAt(modelRow, 0).toString());
+                nameField.setText(tableModel.getValueAt(modelRow, 1).toString());
+                roleCombo.setSelectedItem(tableModel.getValueAt(modelRow, 2));
+                emailField.setText(tableModel.getValueAt(modelRow, 3).toString());
+                phoneField.setText(tableModel.getValueAt(modelRow, 4).toString());
 
-                String specVal = tableModel.getValueAt(row, 5).toString();
+                String specVal = tableModel.getValueAt(modelRow, 5).toString();
                 specField.setText(specVal.equals("-") ? "" : specVal);
-                availBox.setSelected(tableModel.getValueAt(row, 6).toString().equals("true"));
+                availBox.setSelected(tableModel.getValueAt(modelRow, 6).toString().equals("true"));
 
                 passField.setEnabled(false); // Hide password input field during updates
                 roleCombo.setEnabled(false); // Disable role change for existing staff
                 addBtn.setEnabled(false);
+                updateBtn.setEnabled(true);
+                deleteBtn.setEnabled(true);
+                resetBtn.setEnabled(true);
             }
         });
 
@@ -223,6 +237,27 @@ public class StaffManagementPage extends JPanel {
             }
         });
 
+        // RESET PASSWORD Integration
+        resetBtn.addActionListener(e -> {
+            int selectedRow = staffTable.getSelectedRow();
+            if (selectedRow < 0) {
+                JOptionPane.showMessageDialog(this, "Please select a staff member to reset password.");
+                return;
+            }
+            String userId = idField.getText();
+            try {
+                User updated = userService.resetSelectedUserPassword(userId);
+                if (updated != null) {
+                    String defaultPassword = updated.getUserId() + updated.getRole();
+                    JOptionPane.showMessageDialog(this, "Password reset. New password: " + defaultPassword);
+                    refreshTableData();
+                    clearForm();
+                }
+            } catch (ServiceException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Reset Failed", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
         clearBtn.addActionListener(e -> clearForm());
     }
 
@@ -234,10 +269,13 @@ public class StaffManagementPage extends JPanel {
         passField.setText("");
         passField.setEnabled(true);
         specField.setText("");
-        availBox.setSelected(true);
+        availBox.setSelected(false);
         roleCombo.setSelectedIndex(0);
         roleCombo.setEnabled(true);
         addBtn.setEnabled(true);
         staffTable.clearSelection();
+        updateBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
+        resetBtn.setEnabled(false);
     }
 }

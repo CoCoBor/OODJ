@@ -1,11 +1,5 @@
 package backend.service;
 
-import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import backend.models.Appointment;
 import backend.models.CounterStaff;
 import backend.models.Customer;
@@ -18,6 +12,11 @@ import backend.repository.AppointmentRepository;
 import backend.repository.UserRepository;
 import backend.util.IdGenerator;
 import backend.util.SessionManager;
+import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class UserService {
 
@@ -40,7 +39,7 @@ public class UserService {
             boolean isAvailable) {
         User currentUser = sessionManager.getCurrentUser();
         String normalizedUsername = requireNonBlank(username, "username");
-        String normalizedPassword = requireNonBlank(password, "password");
+        String normalizedPassword = validatePassword(requireNonBlank(password, "password"));
         String normalizedEmail = validateEmail(requireNonBlank(email, "email"));
         String normalizedPhone = validatePhone(requireNonBlank(phone, "phone"));
 
@@ -164,25 +163,34 @@ public class UserService {
         String normalizedUserId = requireNonBlank(userId, "userId");
         String normalizedPhone = validatePhone(requireNonBlank(phone, "phone"));
         String normalizedEmail = validateEmail(requireNonBlank(email, "email"));
-        String normalizedNewPassword = validatePassword(requireNonBlank(newPassword, "newPassword"));
+        String normalizedNewPassword = newPassword == null ? "" : newPassword.trim();
 
         User target = findUserById(normalizedUserId);
-        if (target == null) {
-    throw new ServiceException("User not found with ID: " + normalizedUserId);
-}
+        ensureUsernameNEmailIsUnique(target.getUsername(), normalizedEmail, normalizedPhone, normalizedUserId);
 
         target.setPhone(normalizedPhone);
         target.setEmail(normalizedEmail);
 
-        if (normalizedNewPassword != null && !normalizedNewPassword.trim().isEmpty()) {
+        if (!normalizedNewPassword.isEmpty()) {
+            validatePassword(normalizedNewPassword);
             try {
-                target.setPassword(User.hashPassword(normalizedNewPassword.trim()));
+                target.setPassword(User.hashPassword(normalizedNewPassword));
             } catch (Exception e) {
                 throw new ServiceException("Error hashing password: " + e.getMessage());
             }
         }
 
         userRepository.update(target);
+
+        User currentUser = sessionManager.getCurrentUser();
+        if (currentUser != null && currentUser.getUserId().equals(target.getUserId())) {
+            currentUser.setPhone(normalizedPhone);
+            currentUser.setEmail(normalizedEmail);
+            if (!normalizedNewPassword.isEmpty()) {
+                currentUser.setPassword(target.getPassword());
+            }
+        }
+
         return target;
     }
 
@@ -264,6 +272,23 @@ public class UserService {
         return false;
     }
 
+    public User resetSelectedUserPassword(String userId) {
+        String normalizedUserId = requireNonBlank(userId, "userId");
+        User target = findUserById(normalizedUserId);
+
+        String defaultPassword = target.getUserId() + target.getRole();
+        String hashedPassword;
+        try {
+            hashedPassword = User.hashPassword(defaultPassword);
+        } catch (Exception e) {
+            System.err.println("Error hashing password: " + e.getMessage());
+            return null;
+        }
+        target.setPassword(hashedPassword);
+        userRepository.update(target);
+        return target;
+    }
+
     public List<User> getAllUsers() {
     return userRepository.findAll();
 }
@@ -312,8 +337,8 @@ public class UserService {
     }
 
     private String validatePassword(String password) {
-        if (password.length() < 6 || password.length() > 16) {
-            throw new ServiceException("Password must be between 6 and 16 characters long");
+        if (password.length() < 6 || password.length() > 26) {
+            throw new ServiceException("Password must be between 6 and 26 characters long");
         }
         return password;
     }
