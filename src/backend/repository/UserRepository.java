@@ -158,7 +158,6 @@ public class UserRepository implements InterfaceRepo<User> {
                 .append(user.getEmail()).append("|")
                 .append(user.getPhone().toString());
 
-        // Add extra fields based on the specific role
         if (user instanceof Technician) {
             Technician t = (Technician) user;
             return baseInfo.toString() + "|" + t.getSpecialization() + "|" + t.getIsAvailable();
@@ -177,7 +176,6 @@ public class UserRepository implements InterfaceRepo<User> {
 
         String[] p = line.split("\\|");
 
-        // 1. Extract common fields (indices 0 to 5)
         String userId = p[0].trim();
         String username = p[1].trim();
         String password = p[2].trim();
@@ -185,7 +183,6 @@ public class UserRepository implements InterfaceRepo<User> {
         String email = p[4].trim();
         String phone = p[5].trim();
 
-        // 2. Create the specific object based on the role
         switch (role) {
             case MANAGER:
                 return new Manager(userId, username, password, email, phone);
@@ -202,7 +199,7 @@ public class UserRepository implements InterfaceRepo<User> {
             default:
                 break;
         }
-        return null; // Return null if role is unrecognized
+        return null;
     }
 
 }

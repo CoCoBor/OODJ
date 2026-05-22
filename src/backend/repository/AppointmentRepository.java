@@ -98,7 +98,7 @@ public class AppointmentRepository implements InterfaceRepo<Appointment> {
                 if(!line.trim().isEmpty()){
                     Appointment appointment = stringToEntity(line);
                     if (appointment != null && !appointment.getAppointmentId().equals(id)) {
-                        updatedLines.add(line); // Keep the line if it doesn't match the ID to delete
+                        updatedLines.add(line);
                     }
                 }
             }

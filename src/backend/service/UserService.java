@@ -37,13 +37,12 @@ public class UserService {
             String email,
             String specialisation,
             boolean isAvailable) {
-        User currentUser = sessionManager.getCurrentUser();
         String normalizedUsername = requireNonBlank(username, "username");
         String normalizedPassword = validatePassword(requireNonBlank(password, "password"));
         String normalizedEmail = validateEmail(requireNonBlank(email, "email"));
         String normalizedPhone = validatePhone(requireNonBlank(phone, "phone"));
 
-        ensureUsernameNEmailIsUnique(normalizedUsername, normalizedEmail,normalizedPhone, null);
+        ensureUsernameNEmailIsUnique(normalizedUsername, normalizedEmail, normalizedPhone, null);
 
         String userId = IdGenerator.nextUserId(extractUserIds(userRepository.findAll()));
 
@@ -290,8 +289,8 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
-    return userRepository.findAll();
-}
+        return userRepository.findAll();
+    }
 
     private boolean isLinkedToUser(Appointment appointment, String userId) {
         return userId.equals(appointment.getCustomerId())
@@ -360,7 +359,6 @@ public class UserService {
 
     public static String hashPassword(String password) throws Exception {
         try {
-            // 1. Get an instance of the SHA-256 algorithm
             MessageDigest md = MessageDigest.getInstance("SHA-256");
 
             byte[] hashBytes = md.digest(password.getBytes());
@@ -373,4 +371,3 @@ public class UserService {
     }
 
 }
-
