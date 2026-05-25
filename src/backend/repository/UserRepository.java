@@ -11,6 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -154,9 +156,10 @@ public class UserRepository implements InterfaceRepo<User> {
         baseInfo.append(user.getUserId()).append("|")
                 .append(user.getUsername()).append("|")
                 .append(user.getPassword()).append("|")
-                .append(user.getRole().toString()).append("|")
+                .append(user.getRole()).append("|")
                 .append(user.getEmail()).append("|")
-                .append(user.getPhone().toString());
+                .append(user.getPhone()).append("|")
+                .append(formatDateTime(user.getLastActiveTime()));
 
         if (user instanceof Technician) {
             Technician t = (Technician) user;
@@ -166,12 +169,12 @@ public class UserRepository implements InterfaceRepo<User> {
             return baseInfo.toString() + "|" + c.getVehicleModel() + "|" + c.getVehiclePlate();
         }
 
-        return baseInfo.toString(); // For Manager or CounterStaff
+        return baseInfo.toString();
     }
 
     private User stringToEntity(String line) {
         if (line == null || line.trim().isEmpty()) {
-            return null; // Skip empty lines
+            return null;
         }
 
         String[] p = line.split("\\|");
@@ -182,25 +185,40 @@ public class UserRepository implements InterfaceRepo<User> {
         Role role = Role.valueOf(p[3].trim());
         String email = p[4].trim();
         String phone = p[5].trim();
+        LocalDateTime lastActiveTime = parseDateTime(p[6].trim());
 
         switch (role) {
             case MANAGER:
-                return new Manager(userId, username, password, email, phone);
+                return new Manager(userId, username, password, email, phone, lastActiveTime);
             case COUNTER_STAFF:
-                return new CounterStaff(userId, username, password, email, phone);
+                return new CounterStaff(userId, username, password, email, phone, lastActiveTime);
             case TECHNICIAN:
-                String specialization = p[6].trim();
-                Boolean isAvailable = Boolean.parseBoolean(p[7].trim());
-                return new Technician(userId, username, password, email, phone, specialization, isAvailable);
+                String specialization = p[7].trim();
+                Boolean isAvailable = Boolean.parseBoolean(p[8].trim());
+                return new Technician(userId, username, password, email, phone, lastActiveTime, specialization, isAvailable);
             case CUSTOMER:
-                String vehicleModel = p[6].trim();
-                String vehiclePlate = p[7].trim();
-                return new Customer(userId, username, password, email, phone, vehicleModel, vehiclePlate);
+                String vehicleModel = p[7].trim();
+                String vehiclePlate = p[8].trim();
+                return new Customer(userId, username, password, email, phone, lastActiveTime, vehicleModel, vehiclePlate);
             default:
                 break;
         }
         return null;
     }
 
+    private LocalDateTime parseDateTime(String dateTimeStr) {
+    
+    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    try {
+        return LocalDateTime.parse(dateTimeStr.trim(), dateFormat); // formatted style
+    } catch (Exception e) {
+        return LocalDateTime.parse(dateTimeStr.trim()); // ISO fallback: yyyy-MM-ddTHH:mm:ss
+    }
 }
 
+    private String formatDateTime(LocalDateTime dateTime) {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return dateTime == null ? "" : dateTime.format(dateFormat);
+    }
+
+}
