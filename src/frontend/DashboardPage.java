@@ -12,6 +12,7 @@ import frontend.manager.StaffManagementPage;
 import frontend.technician.UpdateAppointmentPage;
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
 
 public class DashboardPage extends JPanel {
     private final JTabbedPane tabbedPane;
@@ -22,6 +23,8 @@ public class DashboardPage extends JPanel {
     private backend.service.PaymentService paymentService;
     private backend.service.FeedbackService feedbackService;
     private backend.service.GenerateReportService reportService;
+    private StaffManagementPage staffManagementPage;
+    private boolean staffCommentPopupShown;
 
     public DashboardPage(MainPage app) {
         this.app = app;
@@ -58,12 +61,18 @@ public class DashboardPage extends JPanel {
     public void setupDashboard(User user, UserService userService) {
         tabbedPane.removeAll(); // Clear previous session's tabs
         userStatusLabel.setText(" Logged in: " + user.getUsername() + " (" + user.getRole() + ")");
+        staffCommentPopupShown = false;
+
+        for (ChangeListener listener : tabbedPane.getChangeListeners()) {
+            tabbedPane.removeChangeListener(listener);
+        }
 
         Role role = user.getRole();
 
         // 3. Role-Based Logic: Add tabs based on permissions
         if (role == Role.MANAGER) {
-            tabbedPane.addTab("Staff Management", new StaffManagementPage(userService, feedbackService));
+            staffManagementPage = new StaffManagementPage(userService, feedbackService);
+            tabbedPane.addTab("Staff Management", staffManagementPage);
             if (paymentService != null) {
                 tabbedPane.addTab("Payment History", new frontend.manager.ViewPaymentHistoryPage(paymentService));
             }
@@ -105,5 +114,14 @@ public class DashboardPage extends JPanel {
         }
 
         tabbedPane.addTab("My Profile", new PersonalProfilePage(userService));
+
+        if (role == Role.MANAGER && staffManagementPage != null) {
+            tabbedPane.addChangeListener(e -> {
+                if (!staffCommentPopupShown && tabbedPane.getSelectedComponent() == staffManagementPage) {
+                    staffCommentPopupShown = true;
+                    staffManagementPage.showNewCommentPopupIfNeeded();
+                }
+            });
+        }
     }
 }

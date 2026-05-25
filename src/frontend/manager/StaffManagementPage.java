@@ -7,8 +7,6 @@ import backend.service.FeedbackService;
 import backend.service.ServiceException;
 import backend.service.UserService;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -108,14 +106,6 @@ public class StaffManagementPage extends JPanel {
         deleteBtn.setEnabled(false);
         resetBtn.setEnabled(false);
         refreshTableData();
-
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentShown(ComponentEvent e) {
-                removeComponentListener(this);
-                SwingUtilities.invokeLater(() -> showNewCommentPopupIfNeeded());
-            }
-        });
     }
 
     public void showNewCommentPopupIfNeeded() {
