@@ -12,7 +12,6 @@ import frontend.manager.StaffManagementPage;
 import frontend.technician.UpdateAppointmentPage;
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
 
 public class DashboardPage extends JPanel {
     private final JTabbedPane tabbedPane;
@@ -25,6 +24,7 @@ public class DashboardPage extends JPanel {
     private backend.service.GenerateReportService reportService;
     private StaffManagementPage staffManagementPage;
     private boolean staffCommentPopupShown;
+    private Timer staffCommentPopupTimer;
 
     public DashboardPage(MainPage app) {
         this.app = app;
@@ -57,14 +57,57 @@ public class DashboardPage extends JPanel {
         this.userRepository = userRepository;
     }
 
+    public void triggerManagerCommentPopupAfterDelay(int delayMillis) {
+        if (staffCommentPopupShown) {
+            System.out.println("DEBUG: popup timer skipped because staffCommentPopupShown is already true");
+            return;
+        }
+
+        if (staffCommentPopupTimer != null && staffCommentPopupTimer.isRunning()) {
+            System.out.println("DEBUG: stopping previous popup timer");
+            staffCommentPopupTimer.stop();
+        }
+
+        System.out.println("DEBUG: scheduling popup timer for " + delayMillis + " ms");
+        staffCommentPopupTimer = new Timer(delayMillis, e -> {
+            System.out.println("DEBUG: popup timer fired");
+            if (!staffCommentPopupShown) {
+                staffCommentPopupShown = true;
+                showManagerUnreadCommentsPopup();
+            }
+        });
+        staffCommentPopupTimer.setRepeats(false);
+        staffCommentPopupTimer.start();
+    }
+
+    public void showManagerUnreadCommentsPopup() {
+        if (feedbackService == null) {
+            return;
+        }
+
+        System.out.println("DEBUG: checking unread manager comments now");
+        if (app.getAuthService() != null && app.getAuthService() != null) {
+            System.out.println("DEBUG: current manager lastActiveTime = " +
+                    (app.getAuthService().getClass() != null ? "see AuthService/session state at runtime" : "unknown"));
+        }
+        int newCommentCount = feedbackService.newCommentPopop();
+        System.out.println("DEBUG: unread manager comment count = " + newCommentCount);
+        if (newCommentCount > 0) {
+            JOptionPane.showMessageDialog(this,
+                    "You have " + newCommentCount + " new comment(s) you haven't viewed.",
+                    "New Comments",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
     // This method is called by MainPage right after a successful login
     public void setupDashboard(User user, UserService userService) {
         tabbedPane.removeAll(); // Clear previous session's tabs
         userStatusLabel.setText(" Logged in: " + user.getUsername() + " (" + user.getRole() + ")");
         staffCommentPopupShown = false;
 
-        for (ChangeListener listener : tabbedPane.getChangeListeners()) {
-            tabbedPane.removeChangeListener(listener);
+        if (staffCommentPopupTimer != null && staffCommentPopupTimer.isRunning()) {
+            staffCommentPopupTimer.stop();
         }
 
         Role role = user.getRole();
@@ -85,6 +128,7 @@ public class DashboardPage extends JPanel {
             if (reportService != null) {
                 tabbedPane.addTab("Reports", new AnalyzeReportPage(reportService));
             }
+            tabbedPane.setSelectedIndex(0);
         }
         
         if (role == Role.COUNTER_STAFF) {
@@ -114,14 +158,5 @@ public class DashboardPage extends JPanel {
         }
 
         tabbedPane.addTab("My Profile", new PersonalProfilePage(userService));
-
-        if (role == Role.MANAGER && staffManagementPage != null) {
-            tabbedPane.addChangeListener(e -> {
-                if (!staffCommentPopupShown && tabbedPane.getSelectedComponent() == staffManagementPage) {
-                    staffCommentPopupShown = true;
-                    staffManagementPage.showNewCommentPopupIfNeeded();
-                }
-            });
-        }
     }
 }

@@ -1,6 +1,6 @@
-# Refactoring Preparation Blueprint For OODJ Swing System
+# Refactoring Plan 
 
-This document is planning-only. No code is proposed here. It is based on the current implementation in:
+This document is purely meant for planning purposes:
 - ../MainFrame.java
 - ../ManagerPage.java
 - ../CounterStaffPage.java

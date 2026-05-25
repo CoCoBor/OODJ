@@ -47,11 +47,21 @@ public class LoginPage extends JPanel {
             String password = new String(passField.getPassword());
 
             try {
+                System.out.println("DEBUG: login button clicked for email = " + email);
                 User user = app.getAuthService().login(email, password);
+                System.out.println("DEBUG: login success for role = " + user.getRole() + ", user = " + user.getUsername());
                 DashboardPage dashboard = app.getDashboardPage();
                 dashboard.setupDashboard(user, app.getUserService());
-                JOptionPane.showMessageDialog(this, "Welcome, " + user.getUsername());
+                JOptionPane.showMessageDialog(this,
+                        "Welcome Manager " + user.getUsername() + "",
+                        "Login Successful",
+                        JOptionPane.INFORMATION_MESSAGE);
                 app.showPage("DASHBOARD");
+
+                if (user.getRole() == backend.models.enums.Role.MANAGER) {
+                    System.out.println("DEBUG: starting manager popup timer");
+                    dashboard.triggerManagerCommentPopupAfterDelay(2000);
+                }
             } catch (backend.service.ServiceException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {

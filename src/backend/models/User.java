@@ -57,8 +57,6 @@ public abstract class User {
 
     public void setEmail(String email) {
         String emailChecking = requireNonBlank(email, "email");
-        System.out.println("debugging1 email: " + email); // Debug statement
-        System.out.println("debugging2 email: " + emailChecking); // Debug statement
         validateEmail(emailChecking);
         this.email = emailChecking;
     }
