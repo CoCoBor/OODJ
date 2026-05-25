@@ -15,6 +15,8 @@ import backend.service.UserService;
 import backend.util.SessionManager;
 import frontend.auth.LoginPage;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 public class MainPage extends JFrame {
@@ -43,11 +45,18 @@ public class MainPage extends JFrame {
 
         ServicePriceService priceService = new ServicePriceService(priceRepo, session);
         PaymentService paymentService = new PaymentService(session, priceRepo, apptRepo, paymentRepo);
-        FeedbackService feedbackService = new FeedbackService(feedbackRepo, apptRepo, userRepository, session);
+        FeedbackService feedbackService = new FeedbackService(feedbackRepo, apptRepo, session);
         this.generateReportService = new GenerateReportService(feedbackRepo, apptRepo, userRepository, priceRepo, session);
         setTitle("Car Workshop System");
         setSize(800, 600);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                authService.logout();
+                dispose();
+            }
+        });
         setLocationRelativeTo(null);
 
         // Add Pages
