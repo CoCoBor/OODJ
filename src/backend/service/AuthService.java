@@ -3,6 +3,7 @@ package backend.service;
 import backend.models.User;
 import backend.repository.UserRepository;
 import backend.util.SessionManager;
+import java.time.LocalDateTime;
 
 public class AuthService {
 
@@ -31,6 +32,11 @@ public class AuthService {
     }
 
     public void logout() {
+        User currentUser = sessionManager.getCurrentUser();
+        if (currentUser != null) {
+            currentUser.setLastActiveTime(LocalDateTime.now());
+            userRepository.update(currentUser);
+        }
         sessionManager.logout();
     }
 
