@@ -63,7 +63,7 @@ public class DashboardPage extends JPanel {
 
         // 3. Role-Based Logic: Add tabs based on permissions
         if (role == Role.MANAGER) {
-            tabbedPane.addTab("Staff Management", new StaffManagementPage(userService));
+            tabbedPane.addTab("Staff Management", new StaffManagementPage(userService, feedbackService));
             if (paymentService != null) {
                 tabbedPane.addTab("Payment History", new frontend.manager.ViewPaymentHistoryPage(paymentService));
             }

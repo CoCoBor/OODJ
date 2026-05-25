@@ -2,9 +2,10 @@ package backend.service;
 
 import backend.models.Appointment;
 import backend.models.CustomerFeedback;
+import backend.models.User;
+import backend.models.enums.Role;
 import backend.repository.AppointmentRepository;
 import backend.repository.FeedbackRepository;
-import backend.repository.UserRepository;
 import backend.util.IdGenerator;
 import backend.util.SessionManager;
 import java.time.LocalDateTime;
@@ -15,13 +16,11 @@ public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
     private final AppointmentRepository appointmentRepository;
-    private final UserRepository userRepository;
     private final SessionManager sessionManager;
 
-    public FeedbackService(FeedbackRepository feedbackRepository, AppointmentRepository appointmentRepository, UserRepository userRepository, SessionManager sessionManager) {
+    public FeedbackService(FeedbackRepository feedbackRepository, AppointmentRepository appointmentRepository, SessionManager sessionManager) {
         this.feedbackRepository = feedbackRepository;
         this.appointmentRepository = appointmentRepository;
-        this.userRepository = userRepository;
         this.sessionManager = sessionManager;
     }
 
@@ -76,6 +75,28 @@ public class FeedbackService {
         return matches;
     }
 
+    public int newCommentPopop() {
+        User currentUser = sessionManager.getCurrentUser();
+        if (currentUser == null || currentUser.getRole() != Role.MANAGER) {
+            return 0;
+        }
+
+        LocalDateTime lastActiveTime = currentUser.getLastActiveTime();
+        if (lastActiveTime == null) {
+            return 0;
+        }
+
+        List<CustomerFeedback> feedbacks = feedbackRepository.findAll();
+        int count = 0;
+        for (CustomerFeedback feedback : feedbacks) {
+            LocalDateTime commentTime = feedback.getcommentDateTime();
+                if (commentTime != null && commentTime.isAfter(lastActiveTime)) {
+                    count++;
+                }
+        }
+        return count;
+    }
+
     private List<String> extractFeedbackIds(List<CustomerFeedback> feedbacks) {
         List<String> ids = new ArrayList<>();
         for (CustomerFeedback feedback : feedbacks) {
@@ -84,7 +105,7 @@ public class FeedbackService {
         return ids;
     }
 
-        private Appointment findAppointmentById(String appointmentId) {
+    private Appointment findAppointmentById(String appointmentId) {
         return appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new ServiceException("Appointment not found: " + appointmentId));
     }

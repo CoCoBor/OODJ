@@ -13,6 +13,7 @@ import backend.repository.UserRepository;
 import backend.util.IdGenerator;
 import backend.util.SessionManager;
 import java.security.MessageDigest;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -37,13 +38,13 @@ public class UserService {
             String email,
             String specialisation,
             boolean isAvailable) {
-        User currentUser = sessionManager.getCurrentUser();
         String normalizedUsername = requireNonBlank(username, "username");
         String normalizedPassword = validatePassword(requireNonBlank(password, "password"));
         String normalizedEmail = validateEmail(requireNonBlank(email, "email"));
         String normalizedPhone = validatePhone(requireNonBlank(phone, "phone"));
+        LocalDateTime lastActiveTime = LocalDateTime.now();
 
-        ensureUsernameNEmailIsUnique(normalizedUsername, normalizedEmail,normalizedPhone, null);
+        ensureUsernameNEmailIsUnique(normalizedUsername, normalizedEmail, normalizedPhone, null);
 
         String userId = IdGenerator.nextUserId(extractUserIds(userRepository.findAll()));
 
@@ -58,13 +59,13 @@ public class UserService {
 
         if (role == Role.TECHNICIAN) {
             newUser = new Technician(userId, normalizedUsername, hashedPassword,
-                    normalizedEmail, normalizedPhone, specialisation, isAvailable);
+                    normalizedEmail, normalizedPhone, lastActiveTime, specialisation, isAvailable);
         } else if (role == Role.MANAGER) {
             newUser = new Manager(userId, normalizedUsername, hashedPassword,
-                    normalizedEmail, normalizedPhone);
+                    normalizedEmail, normalizedPhone, lastActiveTime);
         } else if (role == Role.COUNTER_STAFF) {
             newUser = new CounterStaff(userId, normalizedUsername, hashedPassword,
-                    normalizedEmail, normalizedPhone);
+                    normalizedEmail, normalizedPhone, lastActiveTime);
         } else {
             throw new ServiceException("Invalid role for staff creation: " + role);
         }
@@ -86,6 +87,7 @@ public class UserService {
         String normalizedEmail = validateEmail(requireNonBlank(email, "email"));
         String normalizedVehicleModel = requireNonBlank(vehicleModel, "vehicleModel");
         String normalizedVehiclePlate = requireNonBlank(vehiclePlate, "vehiclePlate");
+        LocalDateTime lastActiveTime = LocalDateTime.now();
 
         ensureUsernameNEmailIsUnique(normalizedUsername, normalizedEmail, normalizedPhone, null);
 
@@ -104,6 +106,7 @@ public class UserService {
                 hashedPassword,
                 normalizedEmail,
                 normalizedPhone,
+                lastActiveTime,
                 normalizedVehicleModel,
                 normalizedVehiclePlate
         );
@@ -290,8 +293,8 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
-    return userRepository.findAll();
-}
+        return userRepository.findAll();
+    }
 
     private boolean isLinkedToUser(Appointment appointment, String userId) {
         return userId.equals(appointment.getCustomerId())
@@ -360,7 +363,6 @@ public class UserService {
 
     public static String hashPassword(String password) throws Exception {
         try {
-            // 1. Get an instance of the SHA-256 algorithm
             MessageDigest md = MessageDigest.getInstance("SHA-256");
 
             byte[] hashBytes = md.digest(password.getBytes());
@@ -373,4 +375,3 @@ public class UserService {
     }
 
 }
-

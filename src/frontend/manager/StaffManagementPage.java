@@ -3,9 +3,12 @@ package frontend.manager;
 import backend.models.Technician;
 import backend.models.User;
 import backend.models.enums.Role;
+import backend.service.FeedbackService;
 import backend.service.ServiceException;
 import backend.service.UserService;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -15,8 +18,9 @@ public class StaffManagementPage extends JPanel {
     
 
     private UserService userService; // Use your explicit UserService
-    private JTable staffTable;
-    private DefaultTableModel tableModel;
+    private final FeedbackService feedbackService;
+    private final JTable staffTable;
+    private final DefaultTableModel tableModel;
 
     // Form fields
     private JTextField idField = new JTextField(15);
@@ -36,8 +40,9 @@ public class StaffManagementPage extends JPanel {
     private JButton resetBtn = new JButton("Reset Password");
     private JButton clearBtn = new JButton("Clear Form");
 
-    public StaffManagementPage(UserService userService) {
+    public StaffManagementPage(UserService userService, FeedbackService feedbackService) {
         this.userService = userService;
+        this.feedbackService = feedbackService;
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -103,6 +108,28 @@ public class StaffManagementPage extends JPanel {
         deleteBtn.setEnabled(false);
         resetBtn.setEnabled(false);
         refreshTableData();
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                removeComponentListener(this);
+                SwingUtilities.invokeLater(() -> showNewCommentPopupIfNeeded());
+            }
+        });
+    }
+
+    public void showNewCommentPopupIfNeeded() {
+        if (feedbackService == null) {
+            return;
+        }
+
+        int newCommentCount = feedbackService.newCommentPopop();
+        if (newCommentCount > 0) {
+            JOptionPane.showMessageDialog(this,
+                    "You have " + newCommentCount + " new comment(s) you haven't viewed.",
+                    "New Comments",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private void addFormField(JPanel panel, String labelText, Component comp, GridBagConstraints gbc, int row) {
