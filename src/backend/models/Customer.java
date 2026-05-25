@@ -1,12 +1,13 @@
 package backend.models;
     
 import backend.models.enums.Role;
+import java.time.LocalDateTime;
 
 public class Customer extends User {
     private String vehicleModel;
     private String vehiclePlate;
-    public Customer(String userId, String username, String password, String email, String phone, String vehicleModel, String vehiclePlate) {
-        super(userId, username, password, email, phone, Role.CUSTOMER);
+    public Customer(String userId, String username, String password, String email, String phone, LocalDateTime lastActiveTime, String vehicleModel, String vehiclePlate) {
+        super(userId, username, password, email, phone, lastActiveTime, Role.CUSTOMER);
         this.vehicleModel = vehicleModel;
         this.vehiclePlate = vehiclePlate;
     }

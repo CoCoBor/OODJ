@@ -1,6 +1,7 @@
 package backend.models;
 
 import backend.models.enums.Role;
+import java.time.LocalDateTime;
 
 public class Technician extends User {
 
@@ -8,8 +9,8 @@ public class Technician extends User {
     private String specialization;
 
 
-    public Technician(String userId, String username, String password, String email, String phone, String specialization, Boolean isAvailable) {
-        super(userId, username, password, email, phone, Role.TECHNICIAN);
+    public Technician(String userId, String username, String password, String email, String phone, LocalDateTime lastActiveTime, String specialization, Boolean isAvailable) {
+        super(userId, username, password, email, phone, lastActiveTime, Role.TECHNICIAN);
         setSpecialization(specialization);
         setIsAvailable(isAvailable);
     }

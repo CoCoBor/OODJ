@@ -2,6 +2,7 @@ package backend.models;
 
 import backend.models.enums.Role;
 import java.security.MessageDigest;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -13,14 +14,16 @@ public abstract class User {
     private String password;
     private String email;
     private String phone;
+    private LocalDateTime lastActiveTime;
     private Role role;
 
-    public User(String userId, String username, String password, String email, String phone, Role role) {
+    public User(String userId, String username, String password, String email, String phone, LocalDateTime lastActiveTime, Role role) {
         setUserId(userId);
         setUsername(username);
         setPassword(password);
         setEmail(email);
         setPhone(phone);
+        setLastActiveTime(lastActiveTime);
         setRole(role);
     }
 
@@ -66,6 +69,14 @@ public abstract class User {
 
     public void setPhone(String phone) {
         this.phone = requireNonBlank(phone, "phone");
+    }
+
+    public LocalDateTime getLastActiveTime() {
+        return lastActiveTime;
+    }
+    
+    public void setLastActiveTime(LocalDateTime lastActiveTime) {
+        this.lastActiveTime = Objects.requireNonNull(lastActiveTime, "lastActiveTime cannot be null");
     }
 
     public Role getRole() {
