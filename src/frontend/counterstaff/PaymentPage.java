@@ -88,7 +88,10 @@ public class PaymentPage extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
 
         generateReceiptBtn.addActionListener(e -> onGenerateReceiptFromSelectedPayment());
-        refreshBtn.addActionListener(e -> refreshPaymentsTable());
+        refreshBtn.addActionListener(e -> {
+            refreshAppointments();
+            refreshPaymentsTable();
+        });
     }
 
     private void refreshAppointments() {
@@ -175,4 +178,3 @@ public class PaymentPage extends JPanel {
         }
     }
 }
-

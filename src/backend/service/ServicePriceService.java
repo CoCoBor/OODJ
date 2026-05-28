@@ -37,13 +37,17 @@ public class ServicePriceService {
 
     public int getPriceByServiceType(ServiceType serviceType) {
         ServiceType normalizedServiceType = Objects.requireNonNull(serviceType, "Service type cannot be null");
+        ServicePrice latestPrice = null;
         List<ServicePrice> prices = servicePriceRepository.findAll();
         for (ServicePrice price : prices) {
             if (price.getServiceType() == normalizedServiceType) {
-                return price.getPrice();
+                latestPrice = price;
             }
         }
-        throw new ServiceException("Price not found for service type: " + serviceType);
+        if (latestPrice == null) {
+            throw new ServiceException("Price not found for service type: " + normalizedServiceType);
+        }
+        return latestPrice.getPrice();
     }
 
     public List<ServicePrice> getAllPrices() {
@@ -67,4 +71,3 @@ public class ServicePriceService {
         return ids;
     }
 }
-
