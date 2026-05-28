@@ -53,7 +53,7 @@ public class LoginPage extends JPanel {
                 DashboardPage dashboard = app.getDashboardPage();
                 dashboard.setupDashboard(user, app.getUserService());
                 JOptionPane.showMessageDialog(this,
-                        "Welcome Manager " + user.getUsername() + "",
+                        "Welcome " + user.getUsername() + "",
                         "Login Successful",
                         JOptionPane.INFORMATION_MESSAGE);
                 app.showPage("DASHBOARD");
