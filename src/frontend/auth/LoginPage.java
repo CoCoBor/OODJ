@@ -60,7 +60,7 @@ public class LoginPage extends JPanel {
 
                 if (user.getRole() == backend.models.enums.Role.MANAGER) {
                     System.out.println("DEBUG: starting manager popup timer");
-                    dashboard.triggerManagerCommentPopupAfterDelay(2000);
+                    dashboard.triggerManagerCommentPopupAfterDelay(100);
                 }
             } catch (backend.service.ServiceException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
