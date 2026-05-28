@@ -82,6 +82,7 @@ public class AppoinmentService {
         technician.setIsAvailable(false);
         appointmentRepository.update(appointment);
         userRepository.update(technician);
+        syncCurrentTechnicianSession(technician);
         return appointment;
 
     }
@@ -92,30 +93,13 @@ public class AppoinmentService {
         Appointment appointment = findAppointmentById(normalizedAppointmentId);
         appointment.setStatus(normalizedNewStatus);
 
-        String technicianId = appointment.getTechnicianId();
-        if (normalizedNewStatus == AppointmentStatus.CANCELLED) {
-            if (technicianId != null) {
-                User tech = findUserById(technicianId);
-                if (tech.getRole() == Role.TECHNICIAN) {
-                    Technician technician = (Technician) tech;
-                    technician.setIsAvailable(true);
-                    userRepository.update(technician);
-                }
-            }
-        } else if (normalizedNewStatus == AppointmentStatus.COMPLETED) {
+        if (normalizedNewStatus == AppointmentStatus.COMPLETED) {
             String normalizedNote = requireNonBlank(completionNote, "completionNote");
             appointment.setNotes(normalizedNote);
-            if (technicianId != null) {
-                User tech = findUserById(technicianId);
-                if (tech.getRole() == Role.TECHNICIAN) {
-                    Technician technician = (Technician) tech;
-                    technician.setIsAvailable(true);
-                    userRepository.update(technician);
-                }
-            }
-
         }
+
         appointmentRepository.update(appointment);
+        updateTechnicianAvailability(appointment.getTechnicianId());
         return appointment;
     }
 
@@ -176,6 +160,45 @@ public class AppoinmentService {
     private Appointment findAppointmentById(String appointmentId) {
         return appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new ServiceException("Appointment not found: " + appointmentId));
+    }
+
+    private void updateTechnicianAvailability(String technicianId) {
+        if (technicianId == null || technicianId.trim().isEmpty()) {
+            return;
+        }
+
+        User tech = findUserById(technicianId);
+        if (tech.getRole() != Role.TECHNICIAN) {
+            return;
+        }
+
+        Technician technician = (Technician) tech;
+        technician.setIsAvailable(!hasActiveAppointment(technicianId));
+        userRepository.update(technician);
+        syncCurrentTechnicianSession(technician);
+    }
+
+    private boolean hasActiveAppointment(String technicianId) {
+        for (Appointment appointment : appointmentRepository.findAll()) {
+            if (technicianId.equals(appointment.getTechnicianId()) && isActiveStatus(appointment.getStatus())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isActiveStatus(AppointmentStatus status) {
+        return status == AppointmentStatus.PENDING
+                || status == AppointmentStatus.CONFIRMED
+                || status == AppointmentStatus.IN_PROGRESS;
+    }
+
+    private void syncCurrentTechnicianSession(Technician technician) {
+        User currentUser = sessionManager.getCurrentUser();
+        if (currentUser instanceof Technician currentTechnician
+                && currentTechnician.getUserId().equals(technician.getUserId())) {
+            currentTechnician.setIsAvailable(technician.getIsAvailable());
+        }
     }
 
     private String requireNonBlank(String value, String fieldName) {
