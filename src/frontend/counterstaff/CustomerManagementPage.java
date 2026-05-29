@@ -83,6 +83,7 @@ public class CustomerManagementPage extends JPanel {
 
         updateBtn.setEnabled(false);
         deleteBtn.setEnabled(false);
+        resetBtn.setEnabled(false);
         setupListeners();
         refreshTableData();
     }
@@ -115,6 +116,7 @@ public class CustomerManagementPage extends JPanel {
                 createBtn.setEnabled(false);
                 updateBtn.setEnabled(true);
                 deleteBtn.setEnabled(true);
+                resetBtn.setEnabled(true);
             }
         });
 
@@ -179,6 +181,27 @@ public class CustomerManagementPage extends JPanel {
             }
         });
 
+        resetBtn.addActionListener(e -> {
+            int selectedRow = customerTable.getSelectedRow();
+            if (selectedRow < 0) {
+                JOptionPane.showMessageDialog(this, "Please select a customer to reset password.");
+                return;
+            }
+
+            String customerId = idField.getText();
+            try {
+                User updated = userService.resetSelectedUserPassword(customerId);
+                if (updated != null) {
+                    String defaultPassword = updated.getUserId() + updated.getRole();
+                    JOptionPane.showMessageDialog(this, "Password reset. New password: " + defaultPassword);
+                    refreshTableData();
+                    clearForm();
+                }
+            } catch (ServiceException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Reset Failed", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
         clearBtn.addActionListener(e -> clearForm());
     }
 
@@ -217,7 +240,7 @@ public class CustomerManagementPage extends JPanel {
         createBtn.setEnabled(true);
         updateBtn.setEnabled(false);
         deleteBtn.setEnabled(false);
+        resetBtn.setEnabled(false);
         customerTable.clearSelection();
     }
 }
-
