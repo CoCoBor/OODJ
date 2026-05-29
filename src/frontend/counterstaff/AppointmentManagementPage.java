@@ -10,6 +10,7 @@ import backend.repository.UserRepository;
 import backend.service.AppoinmentService;
 import backend.service.ServiceException;
 import java.awt.*;
+import java.awt.event.HierarchyEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -173,6 +174,11 @@ public class AppointmentManagementPage extends JPanel {
         add(formPanel, BorderLayout.EAST);
 
         setupListeners();
+        addHierarchyListener(e -> {
+            if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && isShowing()) {
+                refreshCustomersAndTechnicians();
+            }
+        });
         refreshAppointmentsTable(null);
     }
 
@@ -193,6 +199,35 @@ public class AppointmentManagementPage extends JPanel {
         customerComboBox.removeAllItems();
         for (User customer : customers) {
             customerComboBox.addItem(customer.getUserId() + " - " + customer.getUsername());
+        }
+    }
+
+    private void refreshCustomersAndTechnicians() {
+        String selectedCustomerId = getSelectedCustomerId();
+        loadCustomersAndTechnicians();
+        populateCustomerComboBox();
+        selectCustomerById(selectedCustomerId);
+    }
+
+    private String getSelectedCustomerId() {
+        Object selectedCustomer = customerComboBox.getSelectedItem();
+        if (selectedCustomer == null) {
+            return null;
+        }
+        return selectedCustomer.toString().split(" - ")[0];
+    }
+
+    private void selectCustomerById(String customerId) {
+        if (customerId == null) {
+            return;
+        }
+
+        for (int i = 0; i < customerComboBox.getItemCount(); i++) {
+            String item = customerComboBox.getItemAt(i);
+            if (item.startsWith(customerId + " - ")) {
+                customerComboBox.setSelectedIndex(i);
+                return;
+            }
         }
     }
 
@@ -300,6 +335,8 @@ public class AppointmentManagementPage extends JPanel {
 
     private void createAppointment() {
         try {
+            refreshCustomersAndTechnicians();
+
             // Validation
             if (customerComboBox.getSelectedIndex() < 0) {
                 JOptionPane.showMessageDialog(this, "Please select a customer.", "Validation Error", JOptionPane.WARNING_MESSAGE);
@@ -425,7 +462,10 @@ public class AppointmentManagementPage extends JPanel {
     }
 
     private void clearForm() {
-        customerComboBox.setSelectedIndex(0);
+        refreshCustomersAndTechnicians();
+        if (customerComboBox.getItemCount() > 0) {
+            customerComboBox.setSelectedIndex(0);
+        }
         serviceTypeComboBox.setSelectedIndex(0);
         scheduledStartField.setText(LocalDate.now().format(DATE_FORMATTER));
         timeComboBox.setSelectedIndex(0);
@@ -435,4 +475,3 @@ public class AppointmentManagementPage extends JPanel {
         updateEndTimeField();
     }
 }
-
